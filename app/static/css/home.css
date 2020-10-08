@@ -1,0 +1,141 @@
+html {
+    -webkit-transition: all 1s ease-in;
+    -moz-transition: all 1s ease-in;
+    -o-transition: all 1s ease-in;
+    -ms-transition: all 1s ease-in;
+    transition: all 1s ease-in;
+}
+
+.flashes {
+  text-align: center;
+  font-style: oblique;
+}
+
+body {
+  color: black;
+  background-color: rgb(236, 236, 236);
+}
+
+nav {
+  font-weight: 400;
+  /* background-color: #01295F; */
+  /* background-color: rgba(29, 29, 29, 0.87); */
+  background-color: #f7f778;
+  /* justify-content: space-between; */
+  justify-content: center;
+  display: flex;
+  transition: all 0.5s ease-in-out;
+}
+
+nav h1 {
+  font-size: 24px;
+  padding: 20px;
+  /* color: #DDD92A; */
+  text-align: left;
+  display: inline-block;
+  margin-right: 200px;
+}
+
+nav img {
+  padding: 20px;
+  /* color: #DDD92A; */
+  text-align: left;
+  display: inline-block;
+}
+
+.topnav-links {
+  display: flex;
+  justify-content: center;
+  /* color: #DDD92A; */
+  float: right;
+  padding: 20px;
+  margin-left: 200px;
+}
+
+.topnav-links p {
+  margin-left: 20px;
+  font-size: 16px;
+  transition: all 0.5s ease-in-out;
+}
+
+.topnav-links a {
+  margin-left: 20px;
+  font-size: 18px;
+  transition: all 0.5s ease-in-out;
+}
+
+.trending {
+  /* font-style: italic; */
+  background-color: rgba(255, 25, 32, 0.94);
+  font-weight: 600;
+}
+
+.cat-container {
+  margin: auto;
+  padding: 10px;
+}
+
+#trending {
+  display: none;
+}
+
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.like{
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+	line-heigth: 50px;
+	border-radius: 50%;
+	color: rgba(0,150,136 ,1);
+	background-color:rgba(38,166,154 ,0.3);
+	border-color: rgba(0,150,136 ,1);
+	border-width: 1px;
+	font-size: 15px;
+}
+
+.likeActive{
+  background-color: blue;
+}
+
+.dislike{
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+	line-heigth: 50px;
+	border-radius: 50%;
+	color: rgba(255,82,82 ,1);
+	background-color: rgba(255,138,128 ,0.3);
+	border-color: rgba(255,82,82 ,1);
+	border-width: 1px;
+	font-size: 15px;
+}
+
+.dislikeActive {
+  background-color: red;
+}
