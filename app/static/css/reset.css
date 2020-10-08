@@ -1,0 +1,135 @@
+html {
+  font: 20px/1.2;
+
+
+  /* font-family: 'Cairo', sans-serif; */
+  /* font-family: 'Literata', serif; */
+  /* font-family: 'Montserrat', sans-serif; */
+  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Roboto Condensed', 'sans-serif';
+
+ /* Photo by Kari Shea on Unsplash */
+}
+
+body, body * {
+  margin:          unset;
+  box-sizing:      border-box;
+  padding:         unset;
+  font-size:       unset;
+  color:           unset;
+  text-decoration: unset;
+  list-style: none;
+}
+
+/* Scale Text */
+.grow {
+  transition: all 1s ease-in-out;
+}
+
+.grow:hover {
+  transform: scale(1.1);
+}
+
+/* fade */
+.fade
+{
+  opacity:0.7;
+}
+
+.fade:hover
+{
+  opacity:1;
+}
+
+/* Used */
+.column {
+  float: left;
+  width: 32%;
+  padding: 10px;
+  height: 300px;
+}
+/*
+.row {
+  width: 48%;
+} */
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.post-column {
+  float: left;
+  width: 45%;
+  padding: 10px;
+  /* height: 300px; */
+}
+/*
+.row {
+  width: 48%;
+} */
+
+.card {
+  background-color: white;
+  margin-top: 20px;
+  color: black;
+}
+
+.left-col {
+  float: left;
+  width: 75%;
+}
+
+.post-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.post-container {
+  display: block;
+  width: 80%;
+  margin-left: 20%;
+}
+
+.post_sub {
+  display: block;
+}
+
+.post-img {
+  width: 375px;
+  height: 210px;
+}
+
+/* Double Categories container */
+.cat-column {
+  float: left;
+  width: 48%;
+  padding: 10px;
+  margin-left: 30px;
+}
+
+.cat-row {
+  display: flex;
+  justify-content: center;
+}
+
+/* Clear floats after the columns */
+.cat-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Not in use */
+/* .column {
+  float: left;
+  width: 50%;
+} */
+
+/* .row:atfer {
+  content: "";
+  display: table;
+  clear: both;
+} */

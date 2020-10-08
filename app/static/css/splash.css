@@ -1,0 +1,135 @@
+html {
+    -webkit-transition: all 1s ease-out;
+    -moz-transition: all 1s ease-out;
+    -o-transition: all 1s ease-out;
+    -ms-transition: all 1s ease-out;
+    transition: all 1s ease-out;
+}
+
+* {
+   margin: 0px;
+   padding: 0px;
+   font-weight: 200;
+   font-family: helvetica neue, helvetica, arial, sans-serif;
+   background-color: black;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+   width: 100%;
+   height: 50px;
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   margin-left: -25%;
+   margin-top: -25px;
+}
+
+p {
+   float: left;
+   line-height: 50px;
+   font-size: 200%;
+   color: #888;
+}
+
+.scroller {
+   height: 50px;
+   line-height: 50px;
+   float: left;
+   margin-left: 5px;
+   overflow: hidden;
+}
+
+.scroller span {
+   display: block;
+   font-size: 200%;
+   color: white;
+}
+
+.scroller .inner {
+   -webkit-animation: scroll 3.5s 1 ease-out;
+   -moz-animation: scroll 3.5s 1 ease-out;
+   animation: scroll 3.5s 1 ease-out;
+   -webkit-animation-fill-mode: forwards;
+   -moz-animation-fill-mode: forwards;
+   animation-fill-mode: forwards;
+}
+
+
+.blue {
+   -webkit-animation: color 0.25s 1 linear;
+   -moz-animation: color 0.25s 1 linear;
+   animation: color 0.25s 1 linear;
+
+      -webkit-animation-delay: 3s;
+   -moz-animation-delay: 3s;
+   animation-delay: 3s;
+
+      -webkit-animation-fill-mode: forwards;
+   -moz-animation-fill-mode: forwards;
+   animation-fill-mode: forwards;
+
+}
+
+
+.blueb {
+   -webkit-animation: color 0.25s 1 linear;
+   -moz-animation: color 0.25s 1 linear;
+   animation: color 0.25s 1 linear;
+
+         -webkit-animation-delay: 8.25s;
+   -moz-animation-delay: 8.25s;
+   animation-delay: 8.25s;
+
+      -webkit-animation-fill-mode: forwards;
+   -moz-animation-fill-mode: forwards;
+   animation-fill-mode: forwards;
+}
+
+
+@-webkit-keyframes color {
+   0%  {color: #000;}
+   100% {color: #2c90c6;}
+}
+
+@-moz-keyframes color {
+   0%  {color: #000;}
+   100% {color: #2c90c6;}
+}
+
+@keyframes color {
+   0%  {color: #000;}
+   100% {color: #2c90c6;}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@-webkit-keyframes scroll {
+   25%  {margin-top: 0px;}
+   50%  {margin-top: 0px;}
+   75%  {margin-top: -50px;}
+   100%  {margin-top: -50px;}
+}
+
+@-moz-keyframes scroll {
+  25%  {margin-top: 0px;}
+  50%  {margin-top: 0px;}
+  75%  {margin-top: -50px;}
+  100%  {margin-top: -50px;}
+}
+
+@keyframes scroll {
+  25%  {margin-top: 0px;}
+  50%  {margin-top: 0px;}
+  75%  {margin-top: -50px;}
+  100%  {margin-top: -50px;}
+}
