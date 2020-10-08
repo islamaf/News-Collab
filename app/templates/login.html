@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>NewsCollab - Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/article.css') }}">
+  </head>
+  <body background="{{ url_for('.static', filename='images/background-2.jpg') }}">
+    <nav>
+      <h1>NewsCollab</h1>
+      <ul class="topnav-links">
+        <li>
+          <a href="{{ url_for('home_bp.home') }}">Home</a>
+        </li>
+        <li>
+          <a href="#">Categories</a>
+        </li>
+        <li>
+          <a href="{{ url_for('login_bp.login_page') }}">Login</a>
+        </li>
+        <li>
+          <a href="{{ url_for('login_bp.register_page') }}">Sign up</a>
+        </li>
+      </ul>
+    </nav>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <article class="container">
+      <div class="box">
+        <h1>Sign in to NewsCollab</h1>
+        <form action="/login" method="POST">
+          <input type="username" placeholder="Username" name="username">
+          <input type="password" placeholder="Password" name="password">
+          <input type="submit" name="submit" value="Log in">
+        </form>
+      </div>
+    </article>
+  </body>
+</html>

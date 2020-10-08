@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>NewsCollab</title>
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/splash.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="scroller">
+        <div class="inner">
+          <span>NewsCollab</span>
+          <span>We connect you to <a class="blue">today</a>.</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+     window.setTimeout(function(){
+       window.location.href = "{{ url_for('home_bp.home2') }}";
+     }, 5000);
+     </script>
+  </body>
+</html>

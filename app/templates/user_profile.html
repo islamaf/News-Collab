@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>NewsCollab - Home Page</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/home.css') }}">
+  </head>
+  <body>
+    <nav>
+      <h1>NewsCollab</h1>
+      <ul class="topnav-links">
+        <li>
+          <a href="{{ url_for('home_bp.home') }}">Home</a>
+        </li>
+        <li>
+          <a onclick="switchVisible();" class="trending" href="#">Trending</a>
+        </li>
+        <li>
+          <a href="#">Categories</a>
+        </li>
+        <li>
+          {% if session['logged_in'] %}
+          <a href="#">{{ username }}</a>
+          {% endif %}
+        </li>
+        <li>
+          {% if session['logged_in'] %}
+          <a href="{{ url_for('login_bp.logout') }}">Logout</a>
+          {% else %}
+          <a href="{{ url_for('login_bp.login_page') }}">Login</a>
+          {% endif %}
+        </li>
+        {% if not session['logged_in'] %}
+          <li>
+            <a href="{{ url_for('login_bp.register') }}">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <!-- trending page -->
+
+    <section id="trending">
+      <div>HERE IS THE TRENDING PAGE</div>
+      <div class="cat-container">
+        <div class="cat-row">
+          <div class="cat-column">
+            <h2>Cat-1-:</h2>
+            <div class="row">
+              <div class="column" style="background-color:#aaa;">
+                <h2>Column 1</h2>
+                <p>Some text..</p>
+              </div>
+              <div class="column" style="background-color:#bbb;">
+                <h2>Column 2</h2>
+                <p>Some text..</p>
+              </div>
+              <div class="column" style="background-color:#ccc;">
+                <h2>Column 3</h2>
+                <p>Some text..</p>
+              </div>
+            </div>
+          </div>
+          <div class="cat-column">
+            <h2>cat-2-:</h2>
+            <div class="row">
+              <div class="column" style="background-color:#aaa;">
+                <h2>Column 1</h2>
+                <p>Some text..</p>
+              </div>
+              <div class="column" style="background-color:#bbb;">
+                <h2>Column 2</h2>
+                <p>Some text..</p>
+              </div>
+              <div class="column" style="background-color:#ccc;">
+                <h2>Column 3</h2>
+                <p>Some text..</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article id="article">
+      <div>
+        <h1>Hey, {{ username }}!</h1>
+        <p>Here, you will find your personal information and all the bookmarked books that you have done.</p>
+
+        <h1>Name: {{ name }}</h1>
+        <h1>Email: {{ email }}</h1>
+      </div>
+      <div>
+        {% for i in range(0, len) %}
+        <div class="post-row post-container">
+          <div class="left-col post-sub">
+            <div class="card">
+              <div class="post-row">
+                <div class="post-column">
+                  <img class="post-img" src="{{ images[i] }}">
+                </div>
+                <div class="post-column">
+                  <a href="{{ links[i] }}"><h2>{{ titles[i] }}</h2></a>
+                  <p>{{ summaries[i] }}</p>
+                  <form action="/unsave" method="POST">
+                    <button class="unsave-post" id="unsave" data-postid="{{ i+1 }}">Unsave</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </article>
+
+    <script src="{{ url_for('.static', filename='js/visibility.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/loader.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/unsave_interaction.js') }}"></script>
+  </body>
+</html>
