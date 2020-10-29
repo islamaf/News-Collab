@@ -17,14 +17,36 @@
           <a href="{{ url_for('home_bp.home_main') }}">Home</a>
         </li>
         <li>
-          <a href="#">Categories</a>
+          <a onclick="switchVisible();" class="trending" href="#">Trending</a>
         </li>
         <li>
+          <div class="dropdown">
+            <a class="dropbtn">Categories</a>
+            <div class="dropdown-content">
+              <a href="{{ url_for('parser_bp.all_news') }}">News</a>
+              <a href="{{ url_for('parser_bp.all_sports') }}">Sports</a>
+              <a href="{{ url_for('parser_bp.all_music') }}">Music</a>
+              <a href="{{ url_for('parser_bp.all_lifestyle') }}">Lifestyle</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          {% if session['logged_in'] %}
+          <a href="{{ url_for('user_bp.user_profile') }}">{{ username }}</a>
+          {% endif %}
+        </li>
+        <li>
+          {% if session['logged_in'] %}
+          <a href="{{ url_for('login_bp.logout') }}">Logout</a>
+          {% else %}
           <a href="{{ url_for('login_bp.login_page') }}">Login</a>
+          {% endif %}
         </li>
-        <li>
-          <a id="active" href="{{ url_for('login_bp.register_page') }}">Sign up</a>
-        </li>
+        {% if not session['logged_in'] %}
+          <li>
+            <a id="active" href="{{ url_for('login_bp.register') }}">Sign Up</a>
+          </li>
+        {% endif %}
       </ul>
     </nav>
     {% with messages = get_flashed_messages() %}
@@ -36,6 +58,7 @@
         </ul>
       {% endif %}
     {% endwith %}
+
     <article class="container">
       <div class="row">
         <div class="column">
