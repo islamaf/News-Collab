@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/register.css') }}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/article.css') }}">
   </head>
-  <body background="{{ url_for('.static', filename='images/background-2.jpg') }}">
-    <nav>
-      <h1>NewsCollab</h1>
+  <body>
+    <nav style="margin-bottom: 0;">
+      <!-- <h1>NewsCollab</h1> -->
+      <img src="{{ url_for('.static', filename='images/vinculum-2.png') }}" width="215" height="60" alt="logo">
       <ul class="topnav-links">
         <li>
-          <a href="{{ url_for('home_bp.home') }}">Home</a>
+          <a href="{{ url_for('home_bp.home_main') }}">Home</a>
         </li>
         <li>
           <a href="#">Categories</a>
@@ -22,7 +23,7 @@
           <a href="{{ url_for('login_bp.login_page') }}">Login</a>
         </li>
         <li>
-          <a href="{{ url_for('login_bp.register_page') }}">Sign up</a>
+          <a id="active" href="{{ url_for('login_bp.register_page') }}">Sign up</a>
         </li>
       </ul>
     </nav>
@@ -36,16 +37,23 @@
       {% endif %}
     {% endwith %}
     <article class="container">
-      <div class="box">
-        <h1>Sign up to NewsCollab</h1>
-        <form action="/userRegistration" method="POST">
-          <input type="text" placeholder="Name" name="name">
-          <input type="username" placeholder="Username" name="username">
-          <input type="email" placeholder="E-mail" name="email">
-          <input type="password" placeholder="Password" name="password">
-          <input type="password" placeholder="Confirm Password" name="confirm">
-          <input type="submit" name="submit">
-        </form>
+      <div class="row">
+        <div class="column">
+          <div class="box">
+            <h1>Sign up to Vinculum</h1>
+            <form action="/userRegistration" method="POST">
+              <input type="text" placeholder="Name" name="name">
+              <input type="username" placeholder="Username" name="username">
+              <input type="email" placeholder="E-mail" name="email">
+              <input type="password" placeholder="Password" name="password">
+              <input type="password" placeholder="Confirm Password" name="confirm">
+              <input type="submit" name="submit" value="Sign Up">
+            </form>
+          </div>
+        </div>
+        <div class="column">
+          <img style="margin-left: 294px;" src="{{ url_for('.static', filename='images/side-background.svg') }}" alt="pic" width="463" height="679">
+        </div>
       </div>
     </article>
   </body>
