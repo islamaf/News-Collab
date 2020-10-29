@@ -154,3 +154,58 @@ def show_post(username):
     con.commit()
     con.close()
     return show
+
+
+def insert_comment(post_id, username, body, timestamp):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    cur.execute("INSERT INTO comments(post_id, username, body, post_time) VALUES (?,?,?,?)",
+                    [post_id, username, body, str(timestamp)])
+    con.commit()
+    con.close()
+
+
+def show_comment(post_id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    show = cur.execute("SELECT body FROM comments WHERE post_id = (?)",
+                       [post_id]).fetchall()
+    con.commit()
+    con.close()
+    return show
+
+
+def display_best_news():
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    show = cur.execute("SELECT * FROM News ORDER BY like_count DESC").fetchall()
+    con.commit()
+    con.close()
+    return show
+
+
+def display_best_music():
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    show = cur.execute("SELECT * FROM Music ORDER BY like_count DESC").fetchall()
+    con.commit()
+    con.close()
+    return show
+
+
+def truncate():
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    cur.execute("DELETE FROM News")
+    cur.execute("DELETE FROM Music")
+    cur.execute("DELETE FROM Lifestyle")
+    con.commit()
+    con.close()
+
+# def display_best_news():
+#     con = sql.connect(posts_db_path)
+#     cur = con.cursor()
+#     show = cur.execute("SELECT * FROM News ORDER BY like_count DESC").fetchall()
+#     con.commit()
+#     con.close()
+#     return show
