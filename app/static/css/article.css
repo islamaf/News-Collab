@@ -1,3 +1,13 @@
+article h2, h3 {
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+#h2-realign {
+  margin-left: -18px;
+  /* background-color: #cf7500; */
+}
+
 .quote h2 {
   padding: 20px;
   color: #DDD92A;
