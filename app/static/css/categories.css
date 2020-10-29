@@ -1,0 +1,49 @@
+.title-adjust {
+  font-size: 20px;
+  margin-left: 35px;
+}
+
+.post-container {
+  display: block;
+  width: 95%;
+  /* margin-left: 20%; */
+  margin-left: 65px;
+}
+
+.post-column-2 {
+  float: left;
+  /* width: 45%; */
+  width: 40%;
+  padding: 10px;
+  /* height: 300px; */
+}
+
+.post-column-2 p {
+  font-style: italic;
+}
+
+.post-column-2 img {
+  box-shadow: -4px 4px 0px 0px #cf7500;
+}
+
+.post-column-2 a {
+  transition: all 0.5s;
+}
+
+.post-column-2 a:hover {
+  color: #cf7500;
+}
+
+.post-column-2 h3 {
+  padding-bottom: 10px;
+}
+
+.post_sub {
+  display: block;
+}
+
+.post-img {
+  width: 520px;
+  height: 345px;
+  margin-left: 20px;
+}
