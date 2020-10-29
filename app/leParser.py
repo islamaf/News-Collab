@@ -1,11 +1,15 @@
 import requests
 import re
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, request, json
 import sqlite3 as sql
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 import app.interaction as interactionHandler
+from app.home import home2
 from config import posts_db_path
+
+from app.userProfile import post_comment
 
 parser_bp = Blueprint('parser_bp', __name__, template_folder='templates', static_folder='static',
                       static_url_path='/static/parser_bp')
@@ -17,6 +21,8 @@ headers = {
 
 con = sql.connect(posts_db_path)
 
+
+# interactionHandler.truncate()
 
 def parse(link):
     web_url = link
@@ -149,7 +155,7 @@ def bbc_news_parsing():
     all_urls = []
     for i in range(0, len(post_link)):
         soup_post = parse(post_link[i])
-        print(post_link[i])
+        # print(post_link[i])
         post_images = soup_post.find_all("img")
         urls = [img['src'] for img in post_images]
         all_urls.append(urls)
@@ -309,6 +315,7 @@ def skynews_parsing():
 
 @parser_bp.route('/news')
 def all_news():
+    username = session['username'].capitalize()
     bbc_title, bbc_link, bbc_image, bbc_summary = bbc_news_parsing()
     rt_title, rt_link, rt_image, rt_summary = rt_parsing()
     # reuters_title, reuters_link, reuters_image, reuters_summary = reuters_parsing()
@@ -327,9 +334,15 @@ def all_news():
 
     news_paper, news_paper_link = newspaper_info(joined_links)
 
-    return render_template("news.html", len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
+    all_comments = []
+    for i in range(40):
+        comments = interactionHandler.show_comment(i)
+        all_comments.append(comments)
+        print(all_comments)
+
+    return render_template("news.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
                            post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
-                           paper_link=news_paper_link)
+                           paper_link=news_paper_link, comments=all_comments)
 
 
 ####################################################################################################
@@ -439,6 +452,7 @@ def sky_sport():
 
 @parser_bp.route('/sport')
 def all_sports():
+    username = session['username'].capitalize()
     bbc_title, bbc_link, bbc_image, bbc_summary = bbc_sport()
     rt_title, rt_link, rt_image, rt_summary = rt_sport()
     skynews_title, skynews_link, skynews_image, skynews_summary = sky_sport()
@@ -450,7 +464,7 @@ def all_sports():
 
     news_paper, news_paper_link = sportpaper_info(joined_links)
 
-    return render_template("sports.html", len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
+    return render_template("sports.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
                            post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
                            paper_link=news_paper_link)
 
@@ -553,6 +567,7 @@ def stereogum_music():
 
 @parser_bp.route('/music')
 def all_music():
+    username = session['username'].capitalize()
     nme_title, nme_link, nme_image, nme_summary = nme_music()
     spin_title, spin_link, spin_image, spin_summary = spin_music()
     stereogum_title, stereogum_link, stereogum_image, stereogum_summary = stereogum_music()
@@ -564,7 +579,7 @@ def all_music():
 
     news_paper, news_paper_link = sportpaper_info(joined_links)
 
-    return render_template("sports.html", len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
+    return render_template("sports.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
                            post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
                            paper_link=news_paper_link)
 
@@ -642,6 +657,7 @@ def earthlingorgeous():
 
 @parser_bp.route('/lifestyle')
 def all_lifestyle():
+    username = session['username'].capitalize()
     cup_title, cup_link, cup_image, cup_summary = cupOfJo()
     earth_title, earth_link, earth_image, earth_summary = earthlingorgeous()
 
@@ -652,6 +668,36 @@ def all_lifestyle():
 
     news_paper, news_paper_link = newspaper_info(joined_links)
 
-    return render_template("news.html", len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
+    return render_template("news.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
                            post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
                            paper_link=news_paper_link)
+
+
+###################################################################################
+
+# ADDING COMMENTS AND DISPLAYING THEM
+# @parser_bp.route('/add_comment', methods=['GET', 'POST'])
+# def post_comment():
+#     if request.method == "POST":
+#         username = session['username'].lower()
+#         body = request.form['body']
+#         time = datetime.now().strftime("%B %d, %Y %I:%M%p")
+#
+#         data_received = json.loads(request.data)
+#         post = interactionHandler.retrieve_postid(data_received['postid'])
+#
+#         # post_info = interactionHandler.get_post_info(data_received['postid'])
+#         # relation = interactionHandler.check_post(username, post_info[0])
+#         print(username)
+#         print(data_received['postid'])
+#         relation = interactionHandler.insert_comment(body, time, post, username)
+#         print(relation)
+#         if relation:
+#             print(relation)
+#             comments = interactionHandler.show_comment(data_received['postid'])
+#             print(comments)
+#             json.dumps({'status': 'success'})
+#             return render_template('news.html', comments=comments)
+#         else:
+#             return json.dumps({'status': 'no post found'})
+#     return home2()
