@@ -5,17 +5,30 @@
     <title>NewsCollab - Home Page</title>
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/article.css') }}">
   </head>
   <body>
     <nav>
-      <!-- <img src="{{ url_for('.static', filename='images/News3.png') }}" alt="logo" width="120" height="80"> -->
-      <h1>NewsCollab</h1>
+      <span id="date_time"></span>
+      <!-- <h1>NewsCollab</h1> -->
+      <img src="{{ url_for('.static', filename='images/vinculum-2.png') }}" width="215" height="60" alt="logo">
       <ul class="topnav-links">
+        <li>
+          <a id="active" href="{{ url_for('home_bp.home_main') }}">Home</a>
+        </li>
         <li>
           <a onclick="switchVisible();" class="trending" href="#">Trending</a>
         </li>
         <li>
-          <a href="#">Categories</a>
+          <div class="dropdown">
+            <a class="dropbtn">Categories</a>
+            <div class="dropdown-content">
+              <a href="{{ url_for('parser_bp.all_news') }}">News</a>
+              <a href="{{ url_for('parser_bp.all_sports') }}">Sports</a>
+              <a href="{{ url_for('parser_bp.all_music') }}">Music</a>
+              <a href="{{ url_for('parser_bp.all_lifestyle') }}">Lifestyle</a>
+            </div>
+          </div>
         </li>
         <li>
           {% if session['logged_in'] %}
@@ -89,98 +102,47 @@
       </div>
     </section>
 
-    <a href="{{ url_for('parser_bp.all_news') }}">go to news</a><br>
-    <a href="{{ url_for('parser_bp.all_sports') }}">go to sports</a><br>
-    <a href="{{ url_for('parser_bp.all_music') }}">go to music</a><br>
-    <a href="{{ url_for('parser_bp.all_lifestyle') }}">go to lifestyle</a><br>
-
     <!-- Article area -->
     <article id="article">
-      <!-- Cats 1 and 2 -->
       <div class="cat-row">
-        <div class="cat-column">
-          <h2>Sports</h2>
-          <div class="row">
+        <div class="cat-column-left">
+          <h2 id="h2-realign">News</h2>
             {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>4</h2>
-              <p>Some text..</p>
+            <div class="post-row" id="right">
+              <div class="post-column">
+                <img class="grow" src="{{ best_news[i][2] }}" width="400" height="250">
+              </div>
+              <div class="post-column">
+                <a href="{{ best_news[i][3] }}" target="_blank"><h3>{{ best_news[i][1] }}</h3></a>
+                <p>{{ best_news[i][4] }}</p>
+              </div>
             </div>
             {% endfor %}
-          </div>
         </div>
-      </div>
-
-      <div class="cat-row">
-        <div class="cat-column">
-          <h2>cat-2-:</h2>
+        <div class="cat-column-right">
+          <h2 id="h2-realign">Music</h2>
           <div class="row">
             {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>5</h2>
-              <p>Some text..</p>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-row">
-        <div class="cat-column">
-          <h2>cat-2-:</h2>
-          <div class="row">
-            {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>5</h2>
-              <p>Some text..</p>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-row">
-        <div class="cat-column">
-          <h2>cat-2-:</h2>
-          <div class="row">
-            {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>5</h2>
-              <p>Some text..</p>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-row">
-        <div class="cat-column">
-          <h2>cat-2-:</h2>
-          <div class="row">
-            {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>5</h2>
-              <p>Some text..</p>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-row">
-        <div class="cat-column">
-          <h2>cat-2-:</h2>
-          <div class="row">
-            {% for i in range(0, 3) %}
-            <div class="column" style="background-color:#aaa;">
-              <h2>5</h2>
-              <p>Some text..</p>
+            <div class="post-row" id="right">
+              <div class="post-column">
+                <img class="grow" src="{{ best_music[i][2] }}" width="180" height="130">
+              </div>
+              <div class="post-column">
+                <a href="{{ best_music[i][3] }}" target="_blank"><h3>{{ best_music[i][1] }}</h3></a>
+                <p>{{ best_music[i][4] }}</p>
+              </div>
             </div>
             {% endfor %}
           </div>
         </div>
       </div>
     </article>
+
+    <!-- <footer>
+      <p>jdfbgkvdkfreb</p>
+    </footer> -->
+
     <script src="{{ url_for('.static', filename='js/visibility.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/display_date.js') }}"></script>
   </body>
 </html>
