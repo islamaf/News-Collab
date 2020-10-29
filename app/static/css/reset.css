@@ -6,7 +6,8 @@ html {
   /* font-family: 'Literata', serif; */
   /* font-family: 'Montserrat', sans-serif; */
   /* font-family: 'Raleway', sans-serif; */
-  font-family: 'Roboto Condensed', 'sans-serif';
+  /* font-family: 'Roboto Condensed', 'sans-serif'; */
+  /* font-family: 'Georgia', 'serif'; */
 
  /* Photo by Kari Shea on Unsplash */
 }
@@ -16,9 +17,13 @@ body, body * {
   box-sizing:      border-box;
   padding:         unset;
   font-size:       unset;
-  color:           unset;
+  /* color:           unset; */
   text-decoration: unset;
   list-style: none;
+}
+
+#active {
+  border-bottom: 2px solid black;
 }
 
 /* Scale Text */
@@ -27,7 +32,7 @@ body, body * {
 }
 
 .grow:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 /* fade */
@@ -48,10 +53,6 @@ body, body * {
   padding: 10px;
   height: 300px;
 }
-/*
-.row {
-  width: 48%;
-} */
 
 .row:after {
   content: "";
@@ -61,24 +62,13 @@ body, body * {
 
 .post-column {
   float: left;
-  width: 45%;
+  width: 50%;
   padding: 10px;
-  /* height: 300px; */
-}
-/*
-.row {
-  width: 48%;
-} */
-
-.card {
-  background-color: white;
-  margin-top: 20px;
-  color: black;
 }
 
 .left-col {
   float: left;
-  width: 75%;
+  width: 100%;
 }
 
 .post-row:after {
@@ -87,32 +77,29 @@ body, body * {
   clear: both;
 }
 
-.post-container {
-  display: block;
-  width: 80%;
-  margin-left: 20%;
-}
-
-.post_sub {
-  display: block;
-}
-
-.post-img {
-  width: 375px;
-  height: 210px;
+#right {
+  border-left: 2px solid #cf7500;
+  padding-left: 5px;
 }
 
 /* Double Categories container */
-.cat-column {
+.cat-column-left {
   float: left;
-  width: 48%;
+  width: 60%;
+  padding: 10px;
+  margin-left: 5px;
+}
+
+.cat-column-right {
+  float: left;
+  width: 30%;
   padding: 10px;
   margin-left: 30px;
 }
 
 .cat-row {
-  display: flex;
-  justify-content: center;
+  display: block;
+  margin-left: 80px;
 }
 
 /* Clear floats after the columns */
@@ -123,13 +110,13 @@ body, body * {
 }
 
 /* Not in use */
-/* .column {
+.column {
   float: left;
   width: 50%;
-} */
+}
 
-/* .row:atfer {
+.row:atfer {
   content: "";
   display: table;
   clear: both;
-} */
+}
