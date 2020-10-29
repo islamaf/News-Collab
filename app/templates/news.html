@@ -8,20 +8,30 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/categories.css') }}">
   </head>
   <body onload="loadIt()">
     <div id="loader"></div>
     <nav>
-      <h1>NewsCollab</h1>
+      <!-- <h1>NewsCollab</h1> -->
+      <img src="{{ url_for('.static', filename='images/newsDoseLogoCopy.svg') }}" width="250" height="55" alt="logo">
       <ul class="topnav-links">
         <li>
-          <a href="{{ url_for('home_bp.home2') }}">Home</a>
+          <a href="{{ url_for('home_bp.home_main') }}">Home</a>
         </li>
         <li>
           <a onclick="switchVisible();" class="trending" href="#">Trending</a>
         </li>
         <li>
-          <a href="#">Categories</a>
+          <div class="dropdown">
+            <a class="dropbtn">Categories</a>
+            <div class="dropdown-content">
+              <a id="active" href="{{ url_for('parser_bp.all_news') }}">News</a>
+              <a href="{{ url_for('parser_bp.all_sports') }}">Sports</a>
+              <a href="{{ url_for('parser_bp.all_music') }}">Music</a>
+              <a href="{{ url_for('parser_bp.all_lifestyle') }}">Lifestyle</a>
+            </div>
+          </div>
         </li>
         <li>
           {% if session['logged_in'] %}
@@ -52,6 +62,7 @@
       {% endif %}
     {% endwith %}
     <!-- trending page -->
+
     <section id="trending">
       <div>HERE IS THE TRENDING PAGE</div>
       <div class="cat-container">
@@ -95,43 +106,52 @@
     </section>
 
     <article style="display: none;" id="article">
-      <h2>News</h2>
+      <h2 class="title-adjust">News</h2>
       {% for i in range(0, len) %}
-      <div class="post-row post-container">
+      <div class="post-row post-container" id="right">
         <div class="left-col post-sub">
-          <div class="card">
-            <div class="post-row">
-              <div class="post-column">
-                <img class="post-img" src="{{ post_image[i] }}">
+          <div class="post-row">
+            <div class="post-column-2">
+              <img class="grow post-img" src="{{ post_image[i] }}">
+            </div>
+            <div class="post-column-2">
+              <a href="{{ post_link[i] }}" target="_blank"><h2>{{ post_title[i] }}</h2></a>
+              <p>{{ post_summary[i] }}</p>
+              <a href="{{ paper_link[i] }}" target="_blank">{{ newspaper[i] }}</a><br>
+              {% if session['logged_in'] %}
+              <form action="/like" method="POST">
+                <button class="like" id="click-like-btn" data-postid="{{ i+1 }}">
+                  <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                </button>
+              </form>
+              <br>
+              <form action="/dislike" method="POST">
+                <button class="dislike" id="click-dislike-btn" data-postid="{{ i+1 }}">
+                	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                </button>
+              </form>
+              <br>
+              <form action="/save_post" method="POST">
+                <button class="save-post" id="click-save-btn" data-postid="{{ i+1 }}">
+                  <i class="fa far fa-save"></i>
+                </button>
+              </form>
+              <br>
+              <form action="/add_comment" method="POST">
+                <p>Post comment</p>
+                <input type="text" name="body">
+                <button type="submit" name="submit" value="Submit">Submit</button>
+              </form>
+              <div>
+                {% for comment in comments[i+1] %}
+                  <p>{{ comment }}</p>
+                {% endfor %}
               </div>
-              <div class="post-column">
-                <a href="{{ post_link[i] }}"><h2>{{ post_title[i] }}</h2></a>
-                <p>{{ post_summary[i] }}</p>
-                <a href="{{ paper_link[i] }}">{{ newspaper[i] }}</a><br>
-                {% if session['logged_in'] %}
-                <form action="/like" method="POST">
-                  <button class="like" id="click-like-btn" data-postid="{{ i+1 }}">
-                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-                  </button>
-                </form>
-                <br>
-                <form action="/dislike" method="POST">
-                  <button class="dislike" id="click-dislike-btn" data-postid="{{ i+1 }}">
-                  	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-                  </button>
-                </form>
-                <br>
-                <form action="/save_post" method="POST">
-                  <button class="save-post" id="click-save-btn" data-postid="{{ i+1 }}">
-                    <i class="fa far fa-save"></i>
-                  </button>
-                </form>
-                {% endif %}
-              </div>
+              {% endif %}
             </div>
           </div>
-          </div>
         </div>
+      </div>
       {% endfor %}
     </article>
 
@@ -141,5 +161,6 @@
     <script src="{{ url_for('.static', filename='js/dislike_interaction.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/save_interaction.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/change_button_color.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/submit_comment.js') }}"></script>
   </body>
 </html>
