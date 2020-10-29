@@ -10,8 +10,9 @@ html {
    margin: 0px;
    padding: 0px;
    font-weight: 200;
-   font-family: helvetica neue, helvetica, arial, sans-serif;
-   background-color: black;
+   /* font-family: helvetica neue, helvetica, arial, sans-serif; */
+   font-family: 'Georgia', 'serif';
+   background-color: #F0A500;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -29,7 +30,7 @@ p {
    float: left;
    line-height: 50px;
    font-size: 200%;
-   color: #888;
+   color: #f4f4f4;
 }
 
 .scroller {
@@ -43,7 +44,7 @@ p {
 .scroller span {
    display: block;
    font-size: 200%;
-   color: white;
+   color: #f4f4f4;
 }
 
 .scroller .inner {
@@ -88,18 +89,18 @@ p {
 
 
 @-webkit-keyframes color {
-   0%  {color: #000;}
-   100% {color: #2c90c6;}
+   0%  {color: #f4f4f4;}
+   100% {color: #1A1C20;}
 }
 
 @-moz-keyframes color {
-   0%  {color: #000;}
-   100% {color: #2c90c6;}
+   0%  {color: #f4f4f4;}
+   100% {color: #1A1C20;}
 }
 
 @keyframes color {
-   0%  {color: #000;}
-   100% {color: #2c90c6;}
+   0%  {color: #f4f4f4;}
+   100% {color: #1A1C20;}
 }
 
 
