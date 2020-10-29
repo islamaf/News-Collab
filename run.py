@@ -1,5 +1,6 @@
 from flask import Flask
 from config import secret_key
+import sqlite3 as sql
 
 from app.home import home_bp
 from app.login import login_bp

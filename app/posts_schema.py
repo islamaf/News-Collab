@@ -98,5 +98,16 @@ def posts_table(con):
         );
     ''')
 
-    con.commit()
+    cursorObj.execute('''
+        CREATE TABLE IF NOT EXISTS comments(
+            id INTEGER PRIMARY KEY,
+            post_id INTEGER,
+            username VARCHAR(255),
+            body TEXT,
+            post_time TEXT,
+            FOREIGN KEY (post_id) REFERENCES News(id),
+            FOREIGN KEY (username) REFERENCES Users(username)
+        );
+    ''')
 
+    con.commit()

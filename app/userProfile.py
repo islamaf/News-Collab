@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session, render_template, flash, redirect, json, url_for
 import sqlite3
+from datetime import datetime
 
 from app.home import home2
 import app.interaction as interactionHandler
@@ -7,7 +8,7 @@ from config import users_db_path
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/static/user_bp')
 
-con = sqlite3.connect(users_db_path)
+# con = sqlite3.connect(users_db_path)
 
 @user_bp.route('/user_profile')
 def user_profile():
@@ -133,3 +134,39 @@ def unsave_post():
                 return json.dumps({'status': 'success'})
             return json.dumps({'status': 'no post found'})
     return home2()
+
+
+@user_bp.route('/add_comment', methods=['GET', 'POST'])
+def post_comment():
+    if request.method == "POST":
+        username = session['username'].lower()
+        body = request.form['body']
+        print(body)
+        time = datetime.now()
+        # time = str(time)
+        # print(body)
+
+        # data_received = json.loads(request.data)
+        # post = interactionHandler.retrieve_postid(data_received['postid'])
+
+        # post_info = interactionHandler.get_post_info(data_received['postid'])
+        # relation = interactionHandler.check_post(username, post_info[0])
+        print(username)
+        print(1)
+        interactionHandler.insert_comment(1, username, body, time)
+        # print(relation)
+        # if relation:
+        #     print(relation)
+        # comments = interactionHandler.show_comment()
+        # print(comments)
+        # comments_first = []
+        # for comment in comments:
+        #     comments_first.append(comment[0])
+        # print(comments_first)
+        return json.dumps({'status': 'success'})
+        # print(comments)
+        # return render_template('news.html', comments=comments_first)
+        # else:
+        #     return json.dumps({'status': 'no post found'})
+    else:
+        return home2()
