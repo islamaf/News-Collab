@@ -21,7 +21,7 @@ def sql_table(con):
     cursorObj.execute('''
         CREATE TABLE IF NOT EXISTS Users(
             id INTEGER PRIMARY KEY,
-            role_id INTEGER,
+            role_id INTEGER, 
             username VARCHAR(20) NOT NULL,
             email TEXT NOT NULL,
             password VARCHAR(25) NOT NULL,

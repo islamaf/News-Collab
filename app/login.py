@@ -1,7 +1,7 @@
-from flask import Blueprint, request, session, render_template, flash
+from flask import Blueprint, request, session, render_template, flash, redirect
 import sqlite3
 
-from app.home import home2
+from app.home import home2, home_main
 import app.db_models as dbHandler
 from config import users_db_path
 
@@ -30,7 +30,8 @@ def login():
             if user_pass:
                 session['logged_in'] = True
                 flash('Logged in!')
-                return render_template('home.html', username=(session['username']).capitalize())
+                # return render_template('home.html', username=(session['username']).capitalize())
+                return redirect('/home')
             else:
                 flash("Wrong password. Try again!")
                 return render_template('login.html')
@@ -40,7 +41,8 @@ def login():
 @login_bp.route('/logout')
 def logout():
     session['logged_in'] = False
-    return home2()
+    # return home_main()
+    return redirect('/main')
 
 @login_bp.route('/userRegistration', methods=['GET', 'POST'])
 def register():

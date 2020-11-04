@@ -316,6 +316,7 @@ def skynews_parsing():
 @parser_bp.route('/news')
 def all_news():
     username = session['username'].capitalize()
+    # print(session['username'])
     bbc_title, bbc_link, bbc_image, bbc_summary = bbc_news_parsing()
     rt_title, rt_link, rt_image, rt_summary = rt_parsing()
     # reuters_title, reuters_link, reuters_image, reuters_summary = reuters_parsing()

@@ -170,3 +170,4 @@ def post_comment():
         #     return json.dumps({'status': 'no post found'})
     else:
         return home2()
+

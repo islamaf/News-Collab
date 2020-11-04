@@ -107,7 +107,8 @@ def posts_table(con):
             post_time TEXT,
             FOREIGN KEY (post_id) REFERENCES News(id),
             FOREIGN KEY (username) REFERENCES Users(username)
-        );
+        ); 
     ''')
 
     con.commit()
+
