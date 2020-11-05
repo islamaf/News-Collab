@@ -2,19 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>NewsCollab - Home Page</title>
+    <title>NewsCollab - News</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/categories.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/article.css') }}">
   </head>
   <body onload="loadIt()">
     <div id="loader"></div>
     <nav>
       <!-- <h1>NewsCollab</h1> -->
-      <img src="{{ url_for('.static', filename='images/vinculum-2.png') }}" width="215" height="60" alt="logo">
+      <img src="{{ url_for('.static', filename='images/vinculum-mo.png') }}" width="215" height="60" alt="logo">
       <ul class="topnav-links">
         <li>
           <a href="{{ url_for('home_bp.home_main') }}">Home</a>

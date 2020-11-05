@@ -1,6 +1,7 @@
 .flashes {
-  text-align: center;
+  text-align: left;
   font-style: oblique;
+  color: red;
 }
 
 .box{

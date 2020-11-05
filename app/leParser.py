@@ -3,7 +3,6 @@ import re
 from flask import Blueprint, render_template, session, request, json
 import sqlite3 as sql
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 import app.interaction as interactionHandler
 from app.home import home2
@@ -42,7 +41,7 @@ def newspaper_info(post_link):
         xx = re.findall(r'\b(\w*sky\w*)\b', i)
         str_xx = ''.join(word for word in xx)
         news_paper.append(str_xx.upper())
-        # news_paper.remove('')
+        news_paper.remove('')
 
     news_paper_link = []
     for i in news_paper:
@@ -80,13 +79,6 @@ def sportpaper_info(post_link):
         news_paper_link.append(link)
 
     return news_paper, news_paper_link
-
-
-def duplicate_limiter(post_item):
-    post_item = list(dict.fromkeys(post_item))
-    post_item = post_item[:10]
-
-    return post_item
 
 
 def news_save_to_db(post_title, post_link, post_image, post_summary, like_count):
@@ -133,193 +125,205 @@ def save_to_db(post_title, post_link, post_image, post_summary, like_count):
         summary = post_summary[i]
         interactionHandler.all_posts(title, image, link, summary, like_count)
 
-#######################################
 
+####################################################################################################
+# NEWS
+####################################################################################################
+
+    #######################################
+    # BBC PARSING
+    #######################################
 
 def bbc_news_parsing():
-    soup = parse("https://www.bbc.com/news")
+    soup = parse('https://www.bbc.com/news')
 
-    post_title = []
-    post_image = []
-    post_link = []
-    post_summary = []
+    titles = []
+    links = []
+    images = []
+    summaries = []
 
-    for i in soup.findAll("h3", class_="gs-c-promo-heading__title"):
-        post_title.append(i.text)
-    post_title = duplicate_limiter(post_title)
+    for i in soup.findAll("div", class_="nw-c-top-stories__primary-item"):
+        titles.append(i.div.a.h3.text)
+        links.append('https://www.bbc.com' + i.div.a.get('href'))
+        images.append(i.div.div.div.div.div.img.get('data-src').replace('{width}', '240'))
+        summaries.append(i.div.p.text)
 
-    for i in soup.findAll("a", class_="gs-c-promo-heading"):
-        post_link.append("https://www.bbc.com" + i.get('href'))
-    post_link = duplicate_limiter(post_link)
+    for i in soup.findAll("div", class_="nw-c-top-stories__secondary-item"):
+        titles.append(i.div.a.h3.text)
+        links.append('https://www.bbc.com' + i.div.a.get('href'))
+        images.append(i.div.div.div.div.img.get("data-src").replace('{width}', '240'))
+        summaries.append(i.div.p.text)
 
-    all_urls = []
-    for i in range(0, len(post_link)):
-        soup_post = parse(post_link[i])
-        # print(post_link[i])
-        post_images = soup_post.find_all("img")
-        urls = [img['src'] for img in post_images]
-        all_urls.append(urls)
+    news_save_to_db(titles, links, images, summaries, 0)
+    save_to_db(titles, links, images, summaries, 0)
 
-    for i in all_urls:
-        for j in i:
-            if "a1.api.bbc.co.uk" in j:
-                i.remove(j)
+    return titles, links, images, summaries
 
-    for i in all_urls:
-        post_image.append(i[0])
+    #######################################
+    # RT PARSING AND ITS FUNCTIONS
+    #######################################
 
-    for i in soup.findAll("p", class_="gs-c-promo-summary"):
-        post_summary.append(i.text)
-    post_summary = duplicate_limiter(post_summary)
+def unique_rt(items):
+    found = set()
+    keep = []
 
-    news_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    for item in items:
+        if item not in found:
+            found.add(item)
+            keep.append(item)
 
-    return post_title, post_link, post_image, post_summary
-
+    return keep[:12]
 
 def rt_parsing():
-    soup = parse('https://www.rt.com/news')
+    soup = parse('https://www.rt.com/news/')
 
-    post_title = []
-    post_image = []
-    post_link = []
-    post_summary = []
-
-    for i in soup.findAll("a", class_="link"):
-        post_title.append(i.text.strip())
-    post_title = duplicate_limiter(post_title)
-    post_title = post_title[1:11]
+    titles = []
+    links = []
+    images = []
+    summaries = []
 
     for i in soup.findAll("a", class_="link"):
-        post_link.append("https://www.rt.com" + i.get('href').strip())
-    post_link = duplicate_limiter(post_link)
+        if i.text.strip() == '' or None:
+            pass
+        else:
+            titles.append(i.text.strip())
+            links.append('https://www.rt.com/' + i.get('href').strip())
 
     for i in soup.findAll("img", class_="media__item"):
-        post_image.append(i.get('src'))
-    post_image = duplicate_limiter(post_image)
-    post_image = post_image[1:11]
+        if i.get('data-src') is None:
+            pass
+        else:
+            images.append(i.get('data-src'))
 
     for i in soup.findAll("div", class_="card__summary"):
-        post_summary.append(i.text.strip())
-    post_summary = duplicate_limiter(post_summary)
+        summaries.append(i.text.strip())
 
-    news_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    titles = unique_rt(titles)
+    links = unique_rt(links)
+    images = unique_rt(images)
+    summaries = unique_rt(summaries)
 
-    return post_title, post_link, post_image, post_summary
+    news_save_to_db(titles, links, images, summaries, 0)
+    save_to_db(titles, links, images, summaries, 0)
 
+    return titles, links, images, summaries
 
-def reuters_parsing():
-    soup = parse('https://www.reuters.com/news/world')
+    #######################################
+    # EXPRESS PARSING AND ITS FUNCTIONS
+    #######################################
 
-    post_title = []
-    post_image = []
-    post_link = []
-    post_summary = []
+def express_limiter(titles, links, images, summaries):
+    titles = titles[:12]
+    links = links[:12]
+    images = images[:12]
+    summaries = summaries[:12]
 
-    for i in soup.findAll("div", class_="story-content"):
-        post_title.append(i.a.text.strip())
-    post_title = duplicate_limiter(post_title)
+    return titles, links, images, summaries
 
-    for i in soup.findAll("div", class_="story-content"):
-        post_link.append("https://www.reuters.com" + i.a.get('href'))
-    post_link = duplicate_limiter(post_link)
-
-    for i in soup.findAll("div", class_="story-photo"):
-        post_image.append(i.a.img.get('org-src'))
-
-    for i in post_image:
-        if i is None:
-            post_image.remove(i)
-
-    while len(post_title) > len(post_image):
-        post_image.append("")
-
-    post_image = duplicate_limiter(post_image)
-
-    for i in soup.findAll("div", class_="story-content"):
-        post_summary.append(i.p.text)
-
-    news_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
-
-    # return post_title
-# print(len(reuters_parsing()))
-    return post_title, post_link, post_image, post_summary
-
+def express_none_check(a, summaries):
+    if a.p is not None:
+        summaries.append(a.p.text)
+    else:
+        summaries.append(a.p)
 
 def express_parsing():
-    soup = parse('https://www.express.co.uk/news/world')
+    soup = parse("https://www.express.co.uk/news/politics")
 
-    post_title = []
-    post_image = []
-    post_link = []
-    post_summary = []
+    titles = []
+    links = []
+    images = []
+    summaries = []
 
-    for i in soup.findAll("li", class_="last"):
-        if i.h4 is not None:
-            post_title.append(i.h4.text)
-    # post_title = duplicate_limiter(post_title)
-    post_title = post_title[:11]
+    for i in soup.findAll("div", class_="section-1b"):
+        a_parsed = i.findAll('a')
+        for a in a_parsed:
+            titles.append(a.h4.text)
+            links.append("https://www.express.co.uk/" + a.get('href'))
+            images.append(a.div.picture.img.get('data-src'))
+            express_none_check(a, summaries)
 
-    for i in soup.findAll("li", class_="last"):
-        if i.a is not None:
-            post_link.append("https://www.express.co.uk" + i.a.get('href'))
-    # post_link = duplicate_limiter(post_link)
-    post_link = post_link[1:12]
+    for i in soup.findAll("div", class_="section-2-a"):
+        a_parsed = i.findAll('a')
+        for a in a_parsed:
+            titles.append(a.h4.text)
+            links.append("https://www.express.co.uk/" + a.get('href'))
+            images.append(a.div.picture.img.get('data-src'))
+            express_none_check(a, summaries)
 
-    for i in range(0, len(post_link)):
-        soup_link = parse(post_link[i])
-        # print(post_link[i])
-        post_image1 = soup_link.find("img", class_="lazy").get('data-src')
-        post_image.append(post_image1)
+    for i in soup.findAll("div", class_="section-2-b"):
+        a_parsed = i.findAll('a')
+        for a in a_parsed:
+            titles.append(a.h4.text)
+            links.append("https://www.express.co.uk/" + a.get('href'))
+            images.append(a.div.picture.img.get('data-src'))
+            express_none_check(a, summaries)
 
-    for i in post_link:
-        post_summary.append('')
+    for i in soup.findAll("div", class_="section-3-a"):
+        a_parsed = i.findAll('a')
+        for a in a_parsed:
+            titles.append(a.h4.text)
+            links.append("https://www.express.co.uk/" + a.get('href'))
+            images.append(a.div.picture.img.get('data-src'))
+            express_none_check(a, summaries)
 
-    news_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    for i in soup.findAll("div", class_="section-3-b"):
+        a_parsed = i.findAll('a')
+        for a in a_parsed:
+            titles.append(a.h4.text)
+            links.append("https://www.express.co.uk/" + a.get('href'))
+            images.append(a.div.picture.img.get('data-src'))
+            express_none_check(a, summaries)
 
-    return post_title, post_link, post_image, post_summary
+    titles, links, images, summaries = express_limiter(titles, links, images, summaries)
 
+    news_save_to_db(titles, links, images, summaries, 0)
+    save_to_db(titles, links, images, summaries, 0)
+
+    return titles, links, images, summaries
+
+    #######################################
+    # SKYNEWS PARSING AND ITS FUNCTIONS
+    #######################################
+
+def skynews_limiter(titles, links, images, summaries):
+    titles = titles[:12]
+    links = links[:12]
+    images = images[:12]
+    summaries = summaries[:12]
+
+    return titles, links, images, summaries
 
 def skynews_parsing():
-    soup = parse('https://news.sky.com/world')
+    soup = parse("https://news.sky.com/world")
 
-    post_title = []
-    post_link = []
-    post_image = []
-    post_summary = []
+    titles = []
+    links = []
+    images = []
+    summaries = []
 
-    for i in soup.findAll("a", class_="sdc-site-tile__headline-link"):
-        post_title.append(i.text.strip())
-    post_title = duplicate_limiter(post_title)
+    for i in soup.findAll("div", class_="sdc-site-tile--has-link"):
+        h3_parser = i.findAll('h3')
+        img_parser = i.findAll('img')
+        for h3 in h3_parser:
+            titles.append(h3.text.strip())
+            links.append("https://news.sky.com" + h3.a.get('href'))
+            summaries.append(h3.p)
 
-    for i in soup.findAll("img", class_="sdc-site-tile__image"):
-        post_image.append(i.get('src'))
-    post_image = duplicate_limiter(post_image)
+        for img in img_parser:
+            images.append(img.get('src'))
 
-    for i in soup.findAll("a", class_="sdc-site-tile__headline-link"):
-        post_link.append("https://news.sky.com" + i.get('href'))
-    post_link = duplicate_limiter(post_link)
+    titles, links, images, summaries = skynews_limiter(titles, links, images, summaries)
 
-    for i in post_link:
-        post_summary.append('')
+    news_save_to_db(titles, links, images, summaries, 0)
+    save_to_db(titles, links, images, summaries, 0)
 
-    news_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
-
-    return post_title, post_link, post_image, post_summary
+    return titles, links, images, summaries
 
 
 @parser_bp.route('/news')
 def all_news():
-    username = session['username'].capitalize()
-    # print(session['username'])
     bbc_title, bbc_link, bbc_image, bbc_summary = bbc_news_parsing()
     rt_title, rt_link, rt_image, rt_summary = rt_parsing()
-    # reuters_title, reuters_link, reuters_image, reuters_summary = reuters_parsing()
     express_title, express_link, express_image, express_summary = express_parsing()
     skynews_title, skynews_link, skynews_image, skynews_summary = skynews_parsing()
 
@@ -328,26 +332,38 @@ def all_news():
     joined_images = bbc_image + rt_image + express_image + skynews_image
     joined_summary = bbc_summary + rt_summary + express_summary + skynews_summary
 
-    # joined_titles = rt_title
-    # joined_links = rt_link
-    # joined_images = rt_image
-    # joined_summary = rt_summary
-
     news_paper, news_paper_link = newspaper_info(joined_links)
 
     all_comments = []
     for i in range(40):
         comments = interactionHandler.show_comment(i)
         all_comments.append(comments)
-        print(all_comments)
+        # print(all_comments)
 
-    return render_template("news.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
-                           post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
-                           paper_link=news_paper_link, comments=all_comments)
+    if session['logged_in']:
+        session['logged_in'] = True
+        username = session['username'].capitalize()
+        return render_template("news.html", username=username, len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link, comments=all_comments)
+    else:
+        session['logged_in'] = False
+        return render_template("news.html", len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link, comments=all_comments)
 
 
 ####################################################################################################
+# SPORTS
+####################################################################################################
 
+def duplicate_limiter(post_item):
+    post_item = list(dict.fromkeys(post_item))
+    post_item = post_item[:10]
+
+    return post_item
 
 def bbc_sport():
     soup = parse("https://www.bbc.com/sport")
@@ -373,8 +389,8 @@ def bbc_sport():
         post_summary.append(i.text)
     post_summary = duplicate_limiter(post_summary)
 
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -410,9 +426,9 @@ def rt_sport():
     for i in post_image:
         if i is None:
             post_image.remove(i)
-
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    #
+    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -445,15 +461,15 @@ def sky_sport():
     # except Exception as e:
     #     pass
 
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
 
 @parser_bp.route('/sport')
 def all_sports():
-    username = session['username'].capitalize()
+    # username = session['username'].capitalize()
     bbc_title, bbc_link, bbc_image, bbc_summary = bbc_sport()
     rt_title, rt_link, rt_image, rt_summary = rt_sport()
     skynews_title, skynews_link, skynews_image, skynews_summary = sky_sport()
@@ -465,13 +481,24 @@ def all_sports():
 
     news_paper, news_paper_link = sportpaper_info(joined_links)
 
-    return render_template("sports.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
-                           post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
-                           paper_link=news_paper_link)
+    if session['logged_in']:
+        session['logged_in'] = True
+        username = session['username'].capitalize()
+        return render_template("sports.html", username=username, len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
+    else:
+        session['logged_in'] = False
+        return render_template("sports.html", len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
 
 
 ##################################################################################################################
-
+# MUSIC
+##################################################################################################################
 
 def nme_music():
     soup = parse('https://www.nme.com/news/music')
@@ -497,8 +524,8 @@ def nme_music():
         post_summary.append(i.text)
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -527,8 +554,8 @@ def spin_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -557,18 +584,15 @@ def stereogum_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
 
-#     return post_link
-# print(stereogum_music())
-
 @parser_bp.route('/music')
 def all_music():
-    username = session['username'].capitalize()
+    # username = session['username'].capitalize()
     nme_title, nme_link, nme_image, nme_summary = nme_music()
     spin_title, spin_link, spin_image, spin_summary = spin_music()
     stereogum_title, stereogum_link, stereogum_image, stereogum_summary = stereogum_music()
@@ -580,13 +604,24 @@ def all_music():
 
     news_paper, news_paper_link = sportpaper_info(joined_links)
 
-    return render_template("sports.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
-                           post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
-                           paper_link=news_paper_link)
+    if session['logged_in']:
+        session['logged_in'] = True
+        username = session['username'].capitalize()
+        return render_template("music.html", username=username, len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
+    else:
+        session['logged_in'] = False
+        return render_template("music.html", len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
 
 
 ##################################################################################################################
-
+# LIFESTYLE
+##################################################################################################################
 
 def cupOfJo():
     soup = parse('https://cupofjo.com/')
@@ -615,8 +650,8 @@ def cupOfJo():
     for i in post_title:
         post_summary.append('')
 
-    lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -649,16 +684,16 @@ def earthlingorgeous():
         i = i.replace("\xa0", "")
         post_summary1.append(i)
     post_summary1 = duplicate_limiter(post_summary1)
-
-    lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    #
+    # lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary1
 
 
 @parser_bp.route('/lifestyle')
 def all_lifestyle():
-    username = session['username'].capitalize()
+    # username = session['username'].capitalize()
     cup_title, cup_link, cup_image, cup_summary = cupOfJo()
     earth_title, earth_link, earth_image, earth_summary = earthlingorgeous()
 
@@ -669,10 +704,19 @@ def all_lifestyle():
 
     news_paper, news_paper_link = newspaper_info(joined_links)
 
-    return render_template("news.html", username=username, len=len(joined_titles), post_title=joined_titles, post_image=joined_images,
-                           post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
-                           paper_link=news_paper_link)
-
+    if session['logged_in']:
+        session['logged_in'] = True
+        username = session['username'].capitalize()
+        return render_template("lifestyle.html", username=username, len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
+    else:
+        session['logged_in'] = False
+        return render_template("lifestyle.html", len=len(joined_titles), post_title=joined_titles,
+                               post_image=joined_images,
+                               post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
+                               paper_link=news_paper_link)
 
 ###################################################################################
 

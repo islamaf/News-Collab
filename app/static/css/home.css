@@ -7,8 +7,9 @@ html {
 }
 
 .flashes {
-  text-align: center;
+  text-align: left;
   font-style: oblique;
+  color: red;
 }
 
 body {
@@ -25,6 +26,7 @@ article a {
   position: absolute;
   top: 0;
   right: 5px;
+  font-style: oblique;
   /* border-bottom: 1px solid black; */
 }
 
