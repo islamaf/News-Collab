@@ -11,7 +11,7 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 # port number the container should expose to outside
-EXPOSE 5000
+EXPOSE 8080
 
 # run the application
 ENTRYPOINT python run.py
