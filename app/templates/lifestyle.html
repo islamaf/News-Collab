@@ -18,14 +18,18 @@
       <img src="{{ url_for('.static', filename='images/vinculum-mo.png') }}" width="215" height="60" alt="logo">
       <ul class="topnav-links">
         <li>
-          <a href="{{ url_for('home_bp.home_main') }}">Home</a>
+          {% if session['logged_in'] %}
+            <a href="{{ url_for('home_bp.home2') }}">Home</a>
+          {% else %}
+            <a href="{{ url_for('home_bp.home_main') }}">Home</a>
+          {% endif %}
         </li>
         <li>
           <a onclick="switchVisible();" class="trending" href="#">Trending</a>
         </li>
         <li>
           <div class="dropdown">
-            <a class="dropbtn">Categories</a>
+            <a id="active" class="dropbtn">Categories</a>
             <div class="dropdown-content">
               <a href="{{ url_for('parser_bp.all_news') }}">News</a>
               <a href="{{ url_for('parser_bp.all_sports') }}">Sports</a>
@@ -120,13 +124,13 @@
               <p>{{ post_summary[i] }}</p>
               <a href="{{ paper_link[i] }}" target="_blank">{{ newspaper[i] }}</a><br>
               {% if session['logged_in'] %}
-              <form action="/like" method="POST">
+              <form action="/lifestyle_like" method="POST">
                 <button class="like" id="click-like-btn" data-postid="{{ i+1 }}">
                   <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
                 </button>
               </form>
               <br>
-              <form action="/dislike" method="POST">
+              <form action="/lifestyle_dislike" method="POST">
                 <button class="dislike" id="click-dislike-btn" data-postid="{{ i+1 }}">
                 	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
                 </button>
@@ -158,8 +162,8 @@
 
     <script src="{{ url_for('.static', filename='js/visibility.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/loader.js') }}"></script>
-    <script src="{{ url_for('.static', filename='js/like_interaction.js') }}"></script>
-    <script src="{{ url_for('.static', filename='js/dislike_interaction.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/lifestyle_like_interaction.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/lifestyle_dislike_interaction.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/save_interaction.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/change_button_color.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/submit_comment.js') }}"></script>

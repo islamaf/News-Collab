@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 import app.interaction as interactionHandler
 from app.home import home2
-from config import posts_db_path
+from config import posts_db_path, users_db_path
 
 from app.userProfile import post_comment
 
@@ -17,9 +17,7 @@ headers = {
     'User-agent': 'Mozilla/5.0'
 }
 
-
-con = sql.connect(posts_db_path)
-
+con = sql.connect(users_db_path)
 
 # interactionHandler.truncate()
 
@@ -41,7 +39,7 @@ def newspaper_info(post_link):
         xx = re.findall(r'\b(\w*sky\w*)\b', i)
         str_xx = ''.join(word for word in xx)
         news_paper.append(str_xx.upper())
-        news_paper.remove('')
+        # news_paper.remove('')
 
     news_paper_link = []
     for i in news_paper:
@@ -87,16 +85,24 @@ def news_save_to_db(post_title, post_link, post_image, post_summary, like_count)
         image = post_image[i]
         link = post_link[i]
         summary = post_summary[i]
-        interactionHandler.news_post_insert(title, image, link, summary, like_count)
+        check = interactionHandler.check_post_news(title)
+        if check:
+            pass
+        else:
+            interactionHandler.news_post_insert(title, image, link, summary, like_count)
 
 
 def sport_save_to_db(post_title, post_link, post_image, post_summary, like_count):
-    for i in range(0, len(post_title)):
+    for i in range(len(post_title)):
         title = post_title[i]
         image = post_image[i]
         link = post_link[i]
         summary = post_summary[i]
-        interactionHandler.sport_post_insert(title, image, link, summary, like_count)
+        check = interactionHandler.check_post_sports(title)
+        if check:
+            pass
+        else:
+            interactionHandler.sport_post_insert(title, image, link, summary, like_count)
 
 
 def music_save_to_db(post_title, post_link, post_image, post_summary, like_count):
@@ -105,7 +111,11 @@ def music_save_to_db(post_title, post_link, post_image, post_summary, like_count
         image = post_image[i]
         link = post_link[i]
         summary = post_summary[i]
-        interactionHandler.music_post_insert(title, image, link, summary, like_count)
+        check = interactionHandler.check_post_music(title)
+        if check:
+            pass
+        else:
+            interactionHandler.music_post_insert(title, image, link, summary, like_count)
 
 
 def lifestyle_save_to_db(post_title, post_link, post_image, post_summary, like_count):
@@ -114,7 +124,11 @@ def lifestyle_save_to_db(post_title, post_link, post_image, post_summary, like_c
         image = post_image[i]
         link = post_link[i]
         summary = post_summary[i]
-        interactionHandler.lifestyle_post_insert(title, image, link, summary, like_count)
+        check = interactionHandler.check_post_lifestyle(title)
+        if check:
+            pass
+        else:
+            interactionHandler.lifestyle_post_insert(title, image, link, summary, like_count)
 
 
 def save_to_db(post_title, post_link, post_image, post_summary, like_count):
@@ -134,6 +148,17 @@ def save_to_db(post_title, post_link, post_image, post_summary, like_count):
     # BBC PARSING
     #######################################
 
+def unique_bbc(items):
+    found = set()
+    keep = []
+
+    for item in items:
+        if item not in found:
+            found.add(item)
+            keep.append(item)
+
+    return keep[:12]
+
 def bbc_news_parsing():
     soup = parse('https://www.bbc.com/news')
 
@@ -142,17 +167,32 @@ def bbc_news_parsing():
     images = []
     summaries = []
 
-    for i in soup.findAll("div", class_="nw-c-top-stories__primary-item"):
-        titles.append(i.div.a.h3.text)
-        links.append('https://www.bbc.com' + i.div.a.get('href'))
-        images.append(i.div.div.div.div.div.img.get('data-src').replace('{width}', '240'))
-        summaries.append(i.div.p.text)
+    for i in soup.findAll("div", class_="nw-c-top-stories"):
+        a_parsed = i.findAll('img')
+        # print(a_parsed)
+        for a in a_parsed:
+            if a.get('src') != "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7":
+                images.append(a.get('src'))
+            else:
+                images.append(a.get('data-src').replace('{width}', '240'))
 
-    for i in soup.findAll("div", class_="nw-c-top-stories__secondary-item"):
-        titles.append(i.div.a.h3.text)
-        links.append('https://www.bbc.com' + i.div.a.get('href'))
-        images.append(i.div.div.div.div.img.get("data-src").replace('{width}', '240'))
-        summaries.append(i.div.p.text)
+    for i in soup.findAll("a", class_="gs-c-promo-heading"):
+        if i.h3 is None:
+            pass
+        else:
+            titles.append(i.h3.text)
+        links.append('https://www.bbc.com' + i.get('href'))
+
+    for i in soup.findAll("p", class_="gs-c-promo-summary"):
+        if i is None:
+            pass
+        else:
+            summaries.append(i.text)
+
+    titles = unique_bbc(titles)
+    links = unique_bbc(links)
+    images = unique_bbc(images)
+    summaries = unique_bbc(summaries)
 
     news_save_to_db(titles, links, images, summaries, 0)
     save_to_db(titles, links, images, summaries, 0)
@@ -385,12 +425,20 @@ def bbc_sport():
         post_link.append("https://www.bbc.com" + i.get('href'))
     post_link = duplicate_limiter(post_link)
 
-    for i in soup.findAll("p", class_="gs-c-promo-summary"):
-        post_summary.append(i.text)
-    post_summary = duplicate_limiter(post_summary)
+    for i in range(len(post_title)):
+        post_summary.append('')
 
-    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    # for i in soup.findAll("p", class_="gs-c-promo-summary"):
+    #     post_summary.append(i.text)
+    # post_summary = duplicate_limiter(post_summary)
+
+    # print(post_title)
+    # print(post_link)
+    # print(post_image)
+    # print(post_summary)
+
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -426,9 +474,9 @@ def rt_sport():
     for i in post_image:
         if i is None:
             post_image.remove(i)
-    #
-    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -453,6 +501,15 @@ def sky_sport():
         post_image.append(i.get('src'))
     post_image = duplicate_limiter(post_image)
 
+    for i in range(len(post_title)):
+        post_summary.append('')
+    # post_summary = duplicate_limiter(post_summary)
+
+    print(post_title)
+    print(post_link)
+    print(post_image)
+    print(post_summary)
+
     # try:
     #     for i in post_link:
     #         soup_link = parse(i)
@@ -461,8 +518,8 @@ def sky_sport():
     # except Exception as e:
     #     pass
 
-    # sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -524,8 +581,8 @@ def nme_music():
         post_summary.append(i.text)
     post_summary = duplicate_limiter(post_summary)
 
-    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -554,8 +611,8 @@ def spin_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -584,8 +641,8 @@ def stereogum_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    # music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
+    save_to_db(post_title, post_link, post_image, post_summary, 0)
 
     return post_title, post_link, post_image, post_summary
 
@@ -717,6 +774,9 @@ def all_lifestyle():
                                post_image=joined_images,
                                post_link=joined_links, post_summary=joined_summary, newspaper=news_paper,
                                paper_link=news_paper_link)
+
+con.close()
+
 
 ###################################################################################
 

@@ -1,0 +1,28 @@
+version: '3.5'
+services:
+#  service_name:
+#    container_name: your_name
+#    image: account_checker:latest
+#    build: .
+#    restart: always
+#    ports:
+#      - 5000:5000
+
+  app:
+      image: account_checker:latest
+
+      container_name: flask_run_test
+
+      build: .
+      restart: always
+
+      environment:
+        - FLASK_ENV=development
+        - FLASK_APP=run.py
+        - DATABASE=credentials.db
+
+      ports:
+        - 5000:5000
+
+      volumes:
+        - ./:/app

@@ -1,10 +1,10 @@
 import sqlite3 as sql
-from config import posts_db_path
-from app.posts_schema import sql_connection, posts_table
+from config import posts_db_path, users_db_path
+# from app.posts_schema import sql_connection, posts_table
+from app.schema import sql_connection, sql_table
 
-con = sql.connect(posts_db_path)
-posts_table(con)
-
+con = sql.connect(users_db_path)
+sql_table(con)
 
 def news_post_insert(title, link, image, summary, like_count):
     con = sql.connect(posts_db_path)
@@ -50,8 +50,44 @@ def all_posts(title, link, image, summary, like_count):
     con.commit()
     con.close()
 
+def check_post_news(title):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    exists = cur.execute("SELECT title FROM News WHERE title=?",
+                      [title]).fetchone()
+    con.commit()
+    con.close()
+    return exists
 
-def retrieve_postid(id):
+def check_post_sports(title):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    exists = cur.execute("SELECT title FROM Sports WHERE title=?",
+                      [title]).fetchone()
+    con.commit()
+    con.close()
+    return exists
+
+def check_post_music(title):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    exists = cur.execute("SELECT title FROM Music WHERE title=?",
+                      [title]).fetchone()
+    con.commit()
+    con.close()
+    return exists
+
+def check_post_lifestyle(title):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    exists = cur.execute("SELECT title FROM Lifestyle WHERE title=?",
+                      [title]).fetchone()
+    con.commit()
+    con.close()
+    return exists
+
+# News table alteration
+def retrieve_newsid(id):
     con = sql.connect(posts_db_path)
     cur = con.cursor()
     pid = cur.execute("SELECT id FROM News WHERE id=?",
@@ -60,8 +96,7 @@ def retrieve_postid(id):
     con.close()
     return pid
 
-
-def retrieve_likecount(id):
+def retrieve_newslikecount(id):
     con = sql.connect(posts_db_path)
     cur = con.cursor()
     likecount = cur.execute("SELECT like_count FROM News WHERE id=?",
@@ -70,11 +105,88 @@ def retrieve_likecount(id):
     con.close()
     return likecount
 
-
-def update_table(task):
+def news_update(task):
     con = sql.connect(posts_db_path)
     cur = con.cursor()
     cur.execute("UPDATE News SET like_count=? WHERE id=?", task)
+    con.commit()
+    con.close()
+
+# Sports table alteration
+def retrieve_sportsid(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    pid = cur.execute("SELECT id FROM Sports WHERE id=?",
+                      [id]).fetchone()
+    con.commit()
+    con.close()
+    return pid
+
+def retrieve_sportslikecount(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    likecount = cur.execute("SELECT like_count FROM Sports WHERE id=?",
+                            [id]).fetchone()
+    con.commit()
+    con.close()
+    return likecount
+
+def sports_update(task):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    cur.execute("UPDATE Sports SET like_count=? WHERE id=?", task)
+    con.commit()
+    con.close()
+
+# Music table alteration
+def retrieve_musicid(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    pid = cur.execute("SELECT id FROM Music WHERE id=?",
+                      [id]).fetchone()
+    con.commit()
+    con.close()
+    return pid
+
+def retrieve_musiclikecount(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    likecount = cur.execute("SELECT like_count FROM Music WHERE id=?",
+                            [id]).fetchone()
+    con.commit()
+    con.close()
+    return likecount
+
+def music_update(task):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    cur.execute("UPDATE Music SET like_count=? WHERE id=?", task)
+    con.commit()
+    con.close()
+
+# Lifestyle table alteration
+def retrieve_lifestyleid(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    pid = cur.execute("SELECT id FROM Lifestyle WHERE id=?",
+                      [id]).fetchone()
+    con.commit()
+    con.close()
+    return pid
+
+def retrieve_lifestylelikecount(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    likecount = cur.execute("SELECT like_count FROM Lifestyle WHERE id=?",
+                            [id]).fetchone()
+    con.commit()
+    con.close()
+    return likecount
+
+def lifestyle_update(task):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    cur.execute("UPDATE Lifestyle SET like_count=? WHERE id=?", task)
     con.commit()
     con.close()
 
@@ -196,6 +308,7 @@ def display_best_music():
 def truncate():
     con = sql.connect(posts_db_path)
     cur = con.cursor()
+    cur.execute("DELETE FROM all_posts")
     cur.execute("DELETE FROM News")
     cur.execute("DELETE FROM Music")
     cur.execute("DELETE FROM Lifestyle")

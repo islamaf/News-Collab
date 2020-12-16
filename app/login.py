@@ -9,7 +9,6 @@ login_bp = Blueprint('login_bp', __name__, template_folder='templates', static_f
 
 con = sqlite3.connect(users_db_path)
 
-
 @login_bp.route('/login')
 def login_page():
     return render_template('login.html')
@@ -65,3 +64,5 @@ def register():
             flash("User already exists, please login or contact admin", "danger")
             return render_template('login.html')
     return render_template('register.html')
+
+con.close()

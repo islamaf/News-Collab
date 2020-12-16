@@ -14,7 +14,11 @@
       <img src="{{ url_for('.static', filename='images/vinculum-mo.png') }}" width="215" height="60" alt="logo">
       <ul class="topnav-links">
         <li>
-          <a id="active" href="{{ url_for('home_bp.home_main') }}">Home</a>
+          {% if session['logged_in'] %}
+            <a id="active" href="{{ url_for('home_bp.home2') }}">Home</a>
+          {% else %}
+            <a id="active" href="{{ url_for('home_bp.home_main') }}">Home</a>
+          {% endif %}
         </li>
         <li>
           <a onclick="switchVisible();" class="trending" href="#">Trending</a>
