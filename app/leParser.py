@@ -573,18 +573,41 @@ def nme_music():
         post_link.append(i.a.get('href'))
     post_link = duplicate_limiter(post_link)
 
-    for i in soup.findAll("span", class_="entry-thumb"):
-        post_image.append(i.get('data-img-url'))
-    post_image = duplicate_limiter(post_image)
+    for i in post_link:
+        soup_link = parse(i)
+        for j in soup_link.findAll("div", class_="tdb-block-inner"):
+            img_parser = j.findAll('img')
+            for img in img_parser:
+                post_image.append(img.get('src'))
+
+    music_jpgs = []
+    for i in post_image:
+        x = re.findall(r'www.(.*?).jpg', i)
+        str_x = ''.join(word for word in x)
+        if str_x == '':
+            # music_jpgs.append("www." + str_x + ".jpg")
+            pass
+        else:
+            music_jpgs.append("www." + str_x + ".jpg")
+
+    # for i in soup.findAll("span", class_="entry-thumb"):
+    #     post_image.append(i.get('data-img-url'))
+    # post_image = duplicate_limiter(post_image)
 
     for i in soup.findAll("div", class_="td-excerpt"):
         post_summary.append(i.text)
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    print(post_title)
+    print(post_link)
+    # print(post_image)
+    print(music_jpgs)
+    print(post_summary)
 
-    return post_title, post_link, post_image, post_summary
+    music_save_to_db(post_title, post_link, music_jpgs, post_summary, 0)
+    save_to_db(post_title, post_link, music_jpgs, post_summary, 0)
+
+    return post_title, post_link, music_jpgs, post_summary
 
 
 def spin_music():
@@ -776,33 +799,3 @@ def all_lifestyle():
                                paper_link=news_paper_link)
 
 con.close()
-
-
-###################################################################################
-
-# ADDING COMMENTS AND DISPLAYING THEM
-# @parser_bp.route('/add_comment', methods=['GET', 'POST'])
-# def post_comment():
-#     if request.method == "POST":
-#         username = session['username'].lower()
-#         body = request.form['body']
-#         time = datetime.now().strftime("%B %d, %Y %I:%M%p")
-#
-#         data_received = json.loads(request.data)
-#         post = interactionHandler.retrieve_postid(data_received['postid'])
-#
-#         # post_info = interactionHandler.get_post_info(data_received['postid'])
-#         # relation = interactionHandler.check_post(username, post_info[0])
-#         print(username)
-#         print(data_received['postid'])
-#         relation = interactionHandler.insert_comment(body, time, post, username)
-#         print(relation)
-#         if relation:
-#             print(relation)
-#             comments = interactionHandler.show_comment(data_received['postid'])
-#             print(comments)
-#             json.dumps({'status': 'success'})
-#             return render_template('news.html', comments=comments)
-#         else:
-#             return json.dumps({'status': 'no post found'})
-#     return home2()
