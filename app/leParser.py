@@ -194,8 +194,8 @@ def bbc_news_parsing():
     images = unique_bbc(images)
     summaries = unique_bbc(summaries)
 
-    news_save_to_db(titles, links, images, summaries, 0)
-    save_to_db(titles, links, images, summaries, 0)
+    news_save_to_db(titles, links, images, summaries, 1)
+    save_to_db(titles, links, images, summaries, 1)
 
     return titles, links, images, summaries
 
@@ -243,8 +243,8 @@ def rt_parsing():
     images = unique_rt(images)
     summaries = unique_rt(summaries)
 
-    news_save_to_db(titles, links, images, summaries, 0)
-    save_to_db(titles, links, images, summaries, 0)
+    news_save_to_db(titles, links, images, summaries, 1)
+    save_to_db(titles, links, images, summaries, 1)
 
     return titles, links, images, summaries
 
@@ -316,8 +316,8 @@ def express_parsing():
 
     titles, links, images, summaries = express_limiter(titles, links, images, summaries)
 
-    news_save_to_db(titles, links, images, summaries, 0)
-    save_to_db(titles, links, images, summaries, 0)
+    news_save_to_db(titles, links, images, summaries, 1)
+    save_to_db(titles, links, images, summaries, 1)
 
     return titles, links, images, summaries
 
@@ -354,8 +354,8 @@ def skynews_parsing():
 
     titles, links, images, summaries = skynews_limiter(titles, links, images, summaries)
 
-    news_save_to_db(titles, links, images, summaries, 0)
-    save_to_db(titles, links, images, summaries, 0)
+    news_save_to_db(titles, links, images, summaries, 1)
+    save_to_db(titles, links, images, summaries, 1)
 
     return titles, links, images, summaries
 
@@ -437,8 +437,8 @@ def bbc_sport():
     # print(post_image)
     # print(post_summary)
 
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -475,8 +475,8 @@ def rt_sport():
         if i is None:
             post_image.remove(i)
 
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -518,8 +518,8 @@ def sky_sport():
     # except Exception as e:
     #     pass
 
-    sport_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    sport_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -573,18 +573,54 @@ def nme_music():
         post_link.append(i.a.get('href'))
     post_link = duplicate_limiter(post_link)
 
-    for i in soup.findAll("span", class_="entry-thumb"):
-        post_image.append(i.get('data-img-url'))
-    post_image = duplicate_limiter(post_image)
+    for i in soup.findAll("span", class_="td-thumb-css"):
+        post_image.append(i.get("style"))
+
+    modified_post_image = []
+    for j in post_image:
+        x = re.findall(r'background-image: url\((.*?)\)', j)
+        str_x = ''.join(word for word in x)
+        modified_post_image.append(str_x)
+
+    print("----------------------------------------------------------------------------")
+    print(modified_post_image)
+    print("----------------------------------------------------------------------------")
+
+    # for i in post_link:
+    #     soup_link = parse(i)
+    #     for j in soup_link.findAll("div", class_="tdb-block-inner"):
+    #         img_parser = j.findAll('img')
+    #         for img in img_parser:
+    #             post_image.append(img.get('src'))
+
+    # music_jpgs = []
+    # for i in post_image:
+    #     x = re.findall(r'www.(.*?).jpg', i)
+    #     str_x = ''.join(word for word in x)
+    #     if str_x == '':
+    #         # music_jpgs.append("www." + str_x + ".jpg")
+    #         pass
+    #     else:
+    #         music_jpgs.append("www." + str_x + ".jpg")
+
+    # for i in soup.findAll("span", class_="entry-thumb"):
+    #     post_image.append(i.get('data-img-url'))
+    # post_image = duplicate_limiter(post_image)
 
     for i in soup.findAll("div", class_="td-excerpt"):
         post_summary.append(i.text)
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    print(post_title)
+    print(post_link)
+    # print(post_image)
+    # print(music_jpgs)
+    print(post_summary)
 
-    return post_title, post_link, post_image, post_summary
+    music_save_to_db(post_title, post_link, modified_post_image, post_summary, 1)
+    save_to_db(post_title, post_link, modified_post_image, post_summary, 1)
+
+    return post_title, post_link, modified_post_image, post_summary
 
 
 def spin_music():
@@ -611,8 +647,8 @@ def spin_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    music_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -641,8 +677,8 @@ def stereogum_music():
         post_summary.append(i.text.strip())
     post_summary = duplicate_limiter(post_summary)
 
-    music_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    save_to_db(post_title, post_link, post_image, post_summary, 0)
+    music_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -707,8 +743,8 @@ def cupOfJo():
     for i in post_title:
         post_summary.append('')
 
-    # lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+    lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary
 
@@ -741,16 +777,15 @@ def earthlingorgeous():
         i = i.replace("\xa0", "")
         post_summary1.append(i)
     post_summary1 = duplicate_limiter(post_summary1)
-    #
-    # lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 0)
-    # save_to_db(post_title, post_link, post_image, post_summary, 0)
+
+    lifestyle_save_to_db(post_title, post_link, post_image, post_summary, 1)
+    save_to_db(post_title, post_link, post_image, post_summary, 1)
 
     return post_title, post_link, post_image, post_summary1
 
 
 @parser_bp.route('/lifestyle')
 def all_lifestyle():
-    # username = session['username'].capitalize()
     cup_title, cup_link, cup_image, cup_summary = cupOfJo()
     earth_title, earth_link, earth_image, earth_summary = earthlingorgeous()
 

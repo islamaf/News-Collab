@@ -7,6 +7,8 @@ from app.login import login_bp
 from app.leParser import parser_bp
 from app.userProfile import user_bp
 
+import app.interaction as interactionHandler
+
 app = Flask(__name__)
 app.register_blueprint(home_bp)
 app.register_blueprint(login_bp)

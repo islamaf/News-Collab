@@ -164,6 +164,15 @@ def music_update(task):
     con.commit()
     con.close()
 
+def retrieve_postid(id):
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    pid = cur.execute("SELECT id FROM News WHERE id=?",
+                      [id]).fetchone()
+    con.commit()
+    con.close()
+    return pid
+
 # Lifestyle table alteration
 def retrieve_lifestyleid(id):
     con = sql.connect(posts_db_path)
@@ -300,6 +309,24 @@ def display_best_music():
     con = sql.connect(posts_db_path)
     cur = con.cursor()
     show = cur.execute("SELECT * FROM Music ORDER BY like_count DESC").fetchall()
+    con.commit()
+    con.close()
+    return show
+
+
+def display_best_sports():
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    show = cur.execute("SELECT * FROM Sports ORDER BY like_count DESC").fetchall()
+    con.commit()
+    con.close()
+    return show
+
+
+def display_best_lifestyle():
+    con = sql.connect(posts_db_path)
+    cur = con.cursor()
+    show = cur.execute("SELECT * FROM Lifestyle ORDER BY like_count DESC").fetchall()
     con.commit()
     con.close()
     return show

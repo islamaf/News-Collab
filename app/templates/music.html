@@ -25,9 +25,6 @@
           {% endif %}
         </li>
         <li>
-          <a onclick="switchVisible();" class="trending" href="#">Trending</a>
-        </li>
-        <li>
           <div class="dropdown">
             <a id="active" class="dropbtn">Categories</a>
             <div class="dropdown-content">
@@ -67,49 +64,6 @@
       {% endif %}
     {% endwith %}
 
-    <!-- trending page -->
-    <section id="trending">
-      <div>HERE IS THE TRENDING PAGE</div>
-      <div class="cat-container">
-        <div class="cat-row">
-          <div class="cat-column">
-            <h2>Cat-1-:</h2>
-            <div class="row">
-              <div class="column" style="background-color:#aaa;">
-                <h2>Column 1</h2>
-                <p>Some text..</p>
-              </div>
-              <div class="column" style="background-color:#bbb;">
-                <h2>Column 2</h2>
-                <p>Some text..</p>
-              </div>
-              <div class="column" style="background-color:#ccc;">
-                <h2>Column 3</h2>
-                <p>Some text..</p>
-              </div>
-            </div>
-          </div>
-          <div class="cat-column">
-            <h2>cat-2-:</h2>
-            <div class="row">
-              <div class="column" style="background-color:#aaa;">
-                <h2>Column 1</h2>
-                <p>Some text..</p>
-              </div>
-              <div class="column" style="background-color:#bbb;">
-                <h2>Column 2</h2>
-                <p>Some text..</p>
-              </div>
-              <div class="column" style="background-color:#ccc;">
-                <h2>Column 3</h2>
-                <p>Some text..</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <article style="display: none;" id="article">
       <h2 class="title-adjust">Music</h2>
       {% for i in range(0, len) %}
@@ -140,12 +94,6 @@
                 <button class="save-post" id="click-save-btn" data-postid="{{ i+1 }}">
                   <i class="fa far fa-save"></i>
                 </button>
-              </form>
-              <br>
-              <form action="/add_comment" method="POST">
-                <p>Post comment</p>
-                <input type="text" name="body">
-                <button type="submit" name="submit" value="Submit">Submit</button>
               </form>
               {% endif %}
             </div>
