@@ -342,10 +342,3 @@ def truncate():
     con.commit()
     con.close()
 
-# def display_best_news():
-#     con = sql.connect(posts_db_path)
-#     cur = con.cursor()
-#     show = cur.execute("SELECT * FROM News ORDER BY like_count DESC").fetchall()
-#     con.commit()
-#     con.close()
-#     return show
