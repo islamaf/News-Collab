@@ -109,7 +109,256 @@ body, body * {
   clear: both;
 }
 
-@media only screen and (device-width: 375px) and (device-height: 812px) {
+@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-min-device-pixel-ratio: 2){
+  body {
+    width: 100%;
+  }
+
+  nav img {
+    width: 215px;
+    height: 60px;
+  }
+
+  img {
+    width: 410px;
+    height: 220px;
+  }
+
+  /* Used */
+  .column {
+    float: left;
+    width: 100%;
+    padding: 10px;
+    height: 150px;
+  }
+
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .post-column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+  }
+
+  .left-col {
+    float: left;
+    width: 100%;
+  }
+
+  .post-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #right {
+    border-left: 2px solid #cf7500;
+    padding-left: 5px;
+  }
+
+  /* Double Categories container */
+  .cat-column-left {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 1px;
+  }
+
+  .cat-column-right {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 0.1666666666666667px;
+  }
+
+  .cat-column-left, .cat-column-right {
+    margin-bottom: 10px;
+  }
+
+  .cat-row {
+    display: block;
+    margin-left: 30px;
+  }
+
+  /* Clear floats after the columns */
+  .cat-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  body {
+    width: 100%;
+  }
+
+  nav img {
+    width: 215px;
+    height: 60px;
+  }
+
+  img {
+    width: 410px;
+    height: 220px;
+  }
+
+  /* Used */
+  .column {
+    float: left;
+    width: 100%;
+    padding: 10px;
+    height: 150px;
+  }
+
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .post-column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+  }
+
+  .left-col {
+    float: left;
+    width: 100%;
+  }
+
+  .post-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #right {
+    border-left: 2px solid #cf7500;
+    padding-left: 5px;
+  }
+
+  /* Double Categories container */
+  .cat-column-left {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 1px;
+  }
+
+  .cat-column-right {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 0.1666666666666667px;
+  }
+
+  .cat-column-left, .cat-column-right {
+    margin-bottom: 10px;
+  }
+
+  .cat-row {
+    display: block;
+    margin-left: 30px;
+  }
+
+  /* Clear floats after the columns */
+  .cat-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-min-device-pixel-ratio: 3){
+  body {
+    width: 100%;
+  }
+
+  nav img {
+    width: 215px;
+    height: 60px;
+  }
+
+  img {
+    width: 410px;
+    height: 220px;
+  }
+
+  /* Used */
+  .column {
+    float: left;
+    width: 100%;
+    padding: 10px;
+    height: 150px;
+  }
+
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .post-column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+  }
+
+  .left-col {
+    float: left;
+    width: 100%;
+  }
+
+  .post-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #right {
+    border-left: 2px solid #cf7500;
+    padding-left: 5px;
+  }
+
+  /* Double Categories container */
+  .cat-column-left {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 1px;
+  }
+
+  .cat-column-right {
+    float: left;
+    width: 100%;
+    padding: 2px;
+    margin-left: 0.1666666666666667px;
+  }
+
+  .cat-column-left, .cat-column-right {
+    margin-bottom: 10px;
+  }
+
+  .cat-row {
+    display: block;
+    margin-left: 30px;
+  }
+
+  /* Clear floats after the columns */
+  .cat-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-min-device-pixel-ratio: 3) {
   body {
     width: 100%;
   }
