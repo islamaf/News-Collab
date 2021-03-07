@@ -65,8 +65,16 @@
               <input type="text" placeholder="Name" name="name">
               <input type="username" placeholder="Username" name="username">
               <input type="email" placeholder="E-mail" name="email">
-              <input type="password" placeholder="Password" name="password">
-              <input type="password" placeholder="Confirm Password" name="confirm">
+              
+              <input id='passwordField' type="password" placeholder="Password" name="password">
+              <div class="warning">
+                <p>Should at least contain 1 upper case and lower case characters, a number and a special symbol.</p>
+              </div>
+              
+              <input id='confirmField' type="password" placeholder="Confirm Password" name="confirm">
+              <div class="confirm-warning">
+                <p>This field should match the password field.</p>
+              </div>
               <input type="submit" name="submit" value="Sign Up">
             </form>
           </div>
@@ -76,5 +84,7 @@
         </div>
       </div>
     </article>
+
+    <script src="{{ url_for('.static', filename='js/passwordValidation.js') }}"></script>
   </body>
 </html>

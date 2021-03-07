@@ -1,9 +1,10 @@
 from flask import Blueprint, request, session, render_template, flash, redirect
 import sqlite3
+import re
 
-from app.home import home2, home_main
 import app.db_models as dbHandler
 from config import users_db_path
+from app.home import home2, home_main
 
 login_bp = Blueprint('login_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/static/login_bp')
 
@@ -51,14 +52,23 @@ def register():
         password = request.form['password']
         confirm = request.form['confirm']
 
+        # Password validation
+        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+    
         register_users = dbHandler.retrieveUsersRegister(username)
         if register_users is None:
-            if password == confirm:
-                user = dbHandler.insertUser(username, email, password, confirm)
-                flash("You are registered, now you can login!", "success")
-                return render_template('login.html', user=user)
+            pat = re.compile(reg)
+            mat = re.search(pat, password)
+            if mat:    
+                if password == confirm:
+                    user = dbHandler.insertUser(username, email, password, confirm)
+                    flash("You are registered, now you can login!", "success")
+                    return render_template('login.html', user=user)
+                else:
+                    flash("Passwords does not match :(", "danger")
+                    return render_template('register.html')
             else:
-                flash("Passwords does not match :(", "danger")
+                flash("Password invalid. Please check conditions :(", "danger")
                 return render_template('register.html')
         else:
             flash("User already exists, please login or contact admin", "danger")

@@ -4,6 +4,20 @@
   color: red;
 }
 
+.warning {
+  display: none;
+  font-size: 10px;
+  white-space: nowrap;
+  width: 430px;
+}
+
+.confirm-warning {
+  display: none;
+  font-size: 10px;
+  white-space: nowrap;
+  width: 205px;
+}
+
 .box{
   width: 600px;
   padding: 40px;
