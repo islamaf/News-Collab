@@ -9,10 +9,10 @@ News collab is a web application that parses and collects data from different ne
 
 ## Easy run
 * Download the git repository to a folder in the local machine.
-* Run ```run.py``` file, which will open command prompt that contains an IP address that looks as the following address ```http://0.0.0.0:5000/```.
-* Change that latter address with the following ```http://localhost:5000/``` and paste it to the browser. The web application should run smoothly. Happy surfing!
+* Run ```run.py``` file, which will open command prompt that contains an IP address that looks as the following address ```http://0.0.0.0:8080/```.
+* Change that latter address with the following ```http://localhost:8080/``` and paste it to the browser. The web application should run smoothly. Happy surfing!
 
 
 ## To run using an IDE such PyCharm, VS Code and so on..
 * Run the ```run.py``` file in the main directory, the running function responisble to locally run the Flask application on the system.
-* In the run window terminal on the IDE, copy and paste the following link ```localhost:5000``` and press enter. 
+* In the run window terminal on the IDE, copy and paste the following link ```localhost:8080``` and press enter. 
