@@ -2,6 +2,7 @@ from flask import Flask
 from config import secret_key
 import sqlite3 as sql
 
+# Run
 from app.home import home_bp
 from app.login import login_bp
 from app.leParser import parser_bp
